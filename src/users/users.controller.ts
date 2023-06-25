@@ -8,29 +8,32 @@ import {
   Delete,
   UseGuards,
   Request,
+  UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginDto } from './dto/login-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  async signUp(@Body() signUpDto: any): Promise<any> {
-    const { email, password } = signUpDto;
-    console.log('signUpDto', signUpDto);
-
-    const user = await this.authService.signUp(email, password);
-    return { message: 'User registration successful', user };
+  async signUp(@Body() signUpDto: CreateUserDto): Promise<User> {
+    const { email, name } = signUpDto;
+    const user = await this.authService.signUp(email, name);
+    return user;
   }
 
-  @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req): Promise<any> {
-    return this.authService.login(req.user);
+  async login(@Body() loginDto: LoginDto): Promise<any> {
+    const { email, password } = loginDto;
+    const user = await this.authService.validateUser(email, password);
+    const res = await this.authService.login(user);
+    return { access_token: res.access_token, data: res.data };
   }
 }
