@@ -17,10 +17,12 @@ import { AuthGuard } from '@nestjs/passport';
 import { AllCar } from './interface/car';
 
 @Controller('cars')
+//AUTHGURAD TO PROTECT ROUTES
 @UseGuards(AuthGuard('jwt'))
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
+  //TO GET ALL DATA OF CARS
   @Get()
   async getAllCars(
     @Query('page') page = 0,
@@ -28,6 +30,8 @@ export class CarController {
   ): Promise<AllCar> {
     return this.carService.getAllCars(+page, +pageSize);
   }
+
+  //TO GET TOTAL COUNT OF CARS
   @Get('count')
   async getAllCarsCount(): Promise<number> {
     return this.carService.getAllCarsCount();
@@ -38,11 +42,13 @@ export class CarController {
     return this.carService.getCarById(id);
   }
 
+  //TO CREATE CAR
   @Post()
   async createCar(@Body() createCarDto: CreateCarDto): Promise<Car> {
     return this.carService.createCar(createCarDto);
   }
 
+  //TO UPDATE CAR
   @Patch(':id')
   async updateCar(
     @Param('id') id: string,
@@ -51,6 +57,7 @@ export class CarController {
     return this.carService.updateCar(id, updateCarDto);
   }
 
+  //TO DELETE CAR
   @Delete(':id')
   async deleteCar(@Param('id') id: string): Promise<Car> {
     return this.carService.deleteCar(id);
