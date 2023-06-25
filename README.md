@@ -21,19 +21,19 @@ $ yarn run start:prod
 
 ## Some of packages used in this project
 
-1. For Send Email
+1. For Send Email</br>
    @nestjs-modules/mailer </br>
    handlebars (To send custom template with email when user signup)
 
-2. For authentication
+2. For authentication</br>
    passport</br>
    passport-jwt</br>
    passport-local
 
-3. For valication
+3. For valication</br>
    class-validator
 
-4. Encryption
+4. Encryption</br>
    bcrypt
 
 ## Important
